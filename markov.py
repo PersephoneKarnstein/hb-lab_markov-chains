@@ -10,9 +10,9 @@ def open_and_read_file(file_path):
     the file's contents as one string of text.
     """
 
-    # your code goes here
+    with open(file_path) as f: file_string = f.read()
 
-    return "Contents of your file as one long string"
+    return file_string
 
 
 def make_chains(text_string):
@@ -40,24 +40,65 @@ def make_chains(text_string):
         [None]
     """
 
-    chains = {}
+    # set of all unique bigrams
+    chains = set()
+    
+    text_string = text_string.split()
+    # print(text_string)
+    for i in range(len(text_string)-1):
+        chains.add((text_string[i], text_string[i+1]))
+    # print(chains)
 
-    # your code goes here
+    chain_dict = {}
 
-    return chains
+    # loop through every ngram in our set of ngrams
+    for ngram in chains:
+        # print('ngram:', ngram)
+        words_following = []
+
+        # loop through every string in the split original text string (['Would'], ['you'],...)
+        ## stop at len - 1 so we don't get an error once we hit the last word
+        for i in range(len(text_string)-1):
+            try:
+                if text_string[i]+text_string[i+1] == ngram[0]+ngram[1]:
+                    # print(text_string[i+2])
+                    words_following.append(text_string[i+2])
+                    # print('words following:', words_following)
+                # chain_dict.add({ngram:words_following})
+            except IndexError: pass
+        chain_dict[ngram] = words_following
+
+    # for mkv in chain_dict: print(mkv, chain_dict[mkv])
+
+
+    return chain_dict
 
 
 def make_text(chains):
     """Return text from chains."""
 
-    words = []
+    our_string = []
+    ## current_tuple = ('could', 'in') ## use choice on list of keys to avoid hardcoding
+    current_tuple = choice(list(chains.keys()))
+    nextword = "llama"
 
-    # your code goes here
-
-    return " ".join(words)
+    our_string = current_tuple[0]+" "+current_tuple[1]
 
 
-input_path = "green-eggs.txt"
+    while nextword != None:
+    # while current_tuple != ("I", "am"):
+        try:
+            nextword = choice(chains[current_tuple])
+
+            next_tuple = (current_tuple[1], nextword)
+            our_string += f" {nextword}"
+            current_tuple = next_tuple
+        except IndexError: break
+    # print(our_string)
+    return our_string
+
+
+input_path = "gettysburg.txt"
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
