@@ -46,7 +46,7 @@ def make_chains(text_string):
     # print(text_string)
 
     # further study: alter the size of n-gram used
-    ngram_size = 3 #for a bigram, want text_string[0:n-1]
+    ngram_size = 2 #for a bigram, want text_string[0:n-1]
     chain_dict = {}
 
     # loop through each word in text string array, and add tuple of current word + next word into chains set
@@ -65,7 +65,7 @@ def make_chains(text_string):
         chain_dict[ngram] = chain_dict.get(ngram, []) + [word_following]
         # print(chain_dict)
 
-    for mkv in chain_dict: print(mkv, ":", chain_dict[mkv])
+    # for mkv in chain_dict: print(mkv, ":", chain_dict[mkv])
 
     return chain_dict
 
@@ -108,6 +108,50 @@ def make_text(chains):
     # print(our_string)
     return our_string
 
+def scriptify(text):
+    is_script = False
+    if "-scr" in sys.argv:
+        is_script = True
+    else: pass
+
+    if is_script:
+        split_text = text.split()
+        was_upper = False
+        for i, word in enumerate(split_text):
+            if word.isupper():
+                if was_upper:pass
+                else:
+                    split_text[i] = f"\n\n{word}"
+                    was_upper = True
+            else: was_upper = False
+            continue
+        return " ".join(split_text)
+    else:
+        return text
+
+def prettify(text):
+    split_text = text.split()
+    completed = False
+    fixed = 0
+    while completed == False:
+        completed = True
+        for i, word in enumerate(split_text):
+            if split_text[i:i+3] == [".", ".", "."]:
+                split_text[i:i+3] = ["..."]
+                completed = False
+                fixed += 1
+                # print(f"corrected {fixed} '...'s")
+                break
+            elif (split_text[i:i+3] == ["..", "."]) or\
+             (split_text[i:i+3] == [".", ".."]):
+                split_text[i:i+3] = ["..."]
+                completed = False
+                fixed += 1
+                # print(f"corrected {fixed} '...'s")
+                break
+    return " ".join(split_text)
+
+
 # allows user to pass in file from command line (python3 markov.py file_name_to_pass)
 input_path = sys.argv[1]
 
@@ -120,4 +164,5 @@ chains = make_chains(input_text)
 # Produce random text
 random_text = make_text(chains)
 
-print(random_text)
+# print(random_text)
+print(scriptify(prettify(random_text)))
