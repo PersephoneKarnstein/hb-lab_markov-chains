@@ -75,7 +75,12 @@ def make_text(chains):
     our_string = []
     ## current_tuple = ('could', 'in') ## use choice on list of keys to avoid hardcoding
     # print(list(chains.keys()))
-    current_tuple = choice(list(chains.keys()))
+    while True:
+        current_tuple = choice(list(chains.keys()))
+        if (current_tuple[0] == current_tuple[0].title()) and \
+        (current_tuple[0] not in ["-", "--", "!", ".", ";", "?", ":"]) :
+            break
+        else: continue
     # print(f"\ncurrent tuple = {current_tuple}")
     # print(f"dictionary entry = {chains[current_tuple]}")
     nextword = "llama"
