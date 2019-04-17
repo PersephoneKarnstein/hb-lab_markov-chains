@@ -142,9 +142,9 @@ def prettify(text):
                 fixed += 1
                 # print(f"corrected {fixed} '...'s")
                 break
-            elif (split_text[i:i+3] == ["..", "."]) or\
-             (split_text[i:i+3] == [".", ".."]):
-                split_text[i:i+3] = ["..."]
+            elif (split_text[i:i+2] == ["..", "."]) or\
+             (split_text[i:i+2] == [".", ".."]):
+                split_text[i:i+2] = ["..."]
                 completed = False
                 fixed += 1
                 # print(f"corrected {fixed} '...'s")
